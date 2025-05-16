@@ -1,0 +1,51 @@
+# templates/langchain-deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "onprem-rag-pipeline.fullname" . }}-langchain
+  labels:
+    {{- include "onprem-rag-pipeline.labels" . | nindent 4 }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ include "onprem-rag-pipeline.fullname" . }}-langchain
+  template:
+    metadata:
+      labels:
+        app: {{ include "onprem-rag-pipeline.fullname" . }}-langchain
+    spec:
+      containers:
+        - name: langchain
+          image: "{{ .Values.langchain.image.repository }}:{{ .Values.langchain.image.tag }}"
+          ports:
+            - containerPort: {{ .Values.langchain.service.port }}
+          env:
+            - name: CHROMADB_URL
+              value: "http://{{ include "onprem-rag-pipeline.fullname" . }}-chromadb.{{ .Release.Namespace }}.svc.cluster.local:{{ .Values.chromadb.service.port }}"
+            - name: OLLAMA_URL
+              value: "http://{{ include "onprem-rag-pipeline.fullname" . }}-ollama.{{ .Release.Namespace }}.svc.cluster.local:{{ .Values.ollama.service.port }}"
+          resources:
+            {{- toYaml .Values.langchain.resources | nindent 12 }}
+
+# HPA for LangChain (commented)
+# {{- if .Values.autoscaling.enabled }}
+# apiVersion: autoscaling/v2beta2
+# kind: HorizontalPodAutoscaler
+# metadata:
+#   name: {{ include "onprem-rag-pipeline.fullname" . }}-langchain-hpa
+# spec:
+#   scaleTargetRef:
+#     apiVersion: apps/v1
+#     kind: Deployment
+#     name: {{ include "onprem-rag-pipeline.fullname" . }}-langchain
+#   minReplicas: {{ .Values.autoscaling.minReplicas }}
+#   maxReplicas: {{ .Values.autoscaling.maxReplicas }}
+#   metrics:
+#     - type: Resource
+#       resource:
+#         name: cpu
+#         target:
+#           type: Utilization
+#           averageUtilization: {{ .Values.autoscaling.targetCPUUtilizationPercentage }}
+# {{- end }}
