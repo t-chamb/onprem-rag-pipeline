@@ -1,0 +1,7 @@
+# Chart.yaml
+apiVersion: v2
+name: onprem-rag-pipeline
+description: Helm chart for deploying an on-prem RAG pipeline using ChromaDB, LangChain, and Ollama
+type: application
+version: 0.1.0
+appVersion: "1.0"
