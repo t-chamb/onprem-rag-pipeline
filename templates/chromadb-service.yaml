@@ -1,0 +1,15 @@
+# templates/chromadb-service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "onprem-rag-pipeline.fullname" . }}-chromadb
+  labels:
+    {{- include "onprem-rag-pipeline.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.chromadb.service.type }}
+  ports:
+    - port: {{ .Values.chromadb.service.port }}
+      targetPort: {{ .Values.chromadb.service.port }}
+      name: http
+  selector:
+    app: {{ include "onprem-rag-pipeline.fullname" . }}-chromadb
