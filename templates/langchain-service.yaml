@@ -1,0 +1,15 @@
+# templates/langchain-service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "onprem-rag-pipeline.fullname" . }}-langchain
+  labels:
+    {{- include "onprem-rag-pipeline.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.langchain.service.type }}
+  ports:
+    - port: {{ .Values.langchain.service.port }}
+      targetPort: {{ .Values.langchain.service.port }}
+      name: http
+  selector:
+    app: {{ include "onprem-rag-pipeline.fullname" . }}-langchain
