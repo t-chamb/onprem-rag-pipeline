@@ -21,7 +21,7 @@ A Helm chart for deploying an on-prem Retrieval‑Augmented Generation (RAG) pip
 1. Add this chart to your local workspace (or publish to your Helm repo):
 
    ```bash
-   git clone https://github.com/your-org/onprem-rag-pipeline.git
+   git clone https://github.com/t-chamb/onprem-rag-pipeline.git
    cd onprem-rag-pipeline
    ```
 
