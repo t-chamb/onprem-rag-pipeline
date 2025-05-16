@@ -1,0 +1,16 @@
+# templates/ollama-deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "onprem-rag-pipeline.fullname" . }}-ollama
+  labels:
+    {{- include "onprem-rag-pipeline.labels" . | nindent 4 }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ include "onprem-rag-pipeline.fullname" . }}-ollama
+  template:
+    metadata:
+      labels:
+        app: {{ include "
